@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export const Header = () => {
   return (
-    <header className="shadow-sm max-w-screen-xl">
+    <header className="shadow-sm max-w-screen-xl mx-auto">
       <div className="mx-auto flex h-16 max-w-screen-xl items-center justify-between px-4">
         <div className="flex w-0 flex-1 lg:hidden">
           <button
