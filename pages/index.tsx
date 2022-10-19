@@ -2,7 +2,6 @@
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 import { Main } from "../components/Main";
-import { Product } from "../components/Product";
 
 const DATA = {
   description: `Lorem Ipsum is simply dummy text of the printing and typesetting
@@ -24,7 +23,6 @@ const Home = () => {
     <div className="flex flex-col min-h-screen ">
       <Header />
       <Main >
-        <Product data={DATA} />
       </Main>
       <Footer />
     </div>
