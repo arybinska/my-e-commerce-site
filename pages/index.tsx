@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { Footer } from "../components/Footer";
-import { Header } from "../components/Header";
+import { Layout } from "../components/Layout";
 import { Main } from "../components/Main";
 
 const DATA = {
@@ -19,14 +18,7 @@ const DATA = {
 };
 
 const Home = () => {
-  return (
-    <div className="flex flex-col min-h-screen ">
-      <Header />
-      <Main >
-      </Main>
-      <Footer />
-    </div>
-  );
+  return <Main>{/*<Product data={DATA}*/}</Main>;
 };
 
 export default Home;

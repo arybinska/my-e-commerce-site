@@ -1,4 +1,5 @@
 import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
+import { serialize } from "next-mdx-remote/serialize";
 import Link from "next/link";
 import { ProductDetails } from "../../components/Product";
 
@@ -11,7 +12,9 @@ const ProductIdPage = ({
 
   return (
     <div>
-      <Link href="/products"><a>Wróć na stronę główną</a></Link>
+      <Link href="/products">
+        <a>Wróć na stronę główną</a>
+      </Link>
       <ProductDetails
         data={{
           id: data.id,
@@ -20,6 +23,7 @@ const ProductIdPage = ({
           thumbnailAlt: data.title,
           description: data.description,
           rating: data.rating.rate,
+          longDescription: data.longDescription,
         }}
       />
     </div>
@@ -29,15 +33,15 @@ const ProductIdPage = ({
 export default ProductIdPage;
 
 export const getStaticPaths = async () => {
-    const res = await fetch(`https://fakestoreapi.com/products/`);
-    const data: StoreApiResponse[] = await res.json();
+  const res = await fetch(`https://naszsklep-api.vercel.app/api/products/`);
+  const data: StoreApiResponse[] = await res.json();
   return {
-    paths: data.map(product => {
-        return {
-            params: {
-                productId: product.id.toString(),
-            }
-        }
+    paths: data.map((product) => {
+      return {
+        params: {
+          productId: product.id.toString(),
+        },
+      };
     }),
     fallback: false,
   };
@@ -53,13 +57,22 @@ export const getStaticProps = async ({
     };
   }
   const res = await fetch(
-    `https://fakestoreapi.com/products/${params.productId}`
+    `https://naszsklep-api.vercel.app/api/products/${params.productId}`
   );
   const data: StoreApiResponse | null = await res.json();
 
+  if (!data) {
+    return {
+      props: {},
+      notFound: true,
+    };
+  }
+
   return {
     props: {
-      data,
+      data: {
+        ...data, longDescription: await serialize(data.longDescription)
+      }
     },
   };
 };
@@ -71,6 +84,7 @@ export interface StoreApiResponse {
   description: string;
   category: string;
   image: string;
+  longDescription: string;
   rating: {
     rate: number;
     count: number;
