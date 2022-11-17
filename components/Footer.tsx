@@ -63,61 +63,12 @@ export const Footer = () => {
               </svg>
             </a>
           </div>
-
-          <nav className="rounded-3xl border-4 border-gray-900 p-6">
-            <ul className="flex flex-wrap justify-center gap-6 text-sm font-bold">
-              <li>
-                <a
-                  className="text-gray-900 transition hover:text-gray-900/75"
-                  href="/"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Website
-                </a>
-              </li>
-
-              <li>
-                <a
-                  className="text-gray-900 transition hover:text-gray-900/75"
-                  href="/"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Uses
-                </a>
-              </li>
-
-              <li>
-                <a
-                  className="text-gray-900 transition hover:text-gray-900/75"
-                  href="/"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Blog
-                </a>
-              </li>
-
-              <li>
-                <a
-                  className="text-gray-900 transition hover:text-gray-900/75"
-                  href="/"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Portfolio
-                </a>
-              </li>
-            </ul>
-          </nav>
-
           <p className="mx-auto max-w-lg text-xs text-gray-500">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum,
             natus tempore illo laborum nam, modi quam sequi amet quo quasi
             impedit iure eum similique pariatur alias exercitationem, porro
             perspiciatis esse. Corporis odit consequatur sint sequi.
-            <span className="mt-4 block"> &copy; 2022 Saul Goodman </span>
+            <span className="mt-4 block"> &copy; 2022</span>
           </p>
         </div>
       </div>
