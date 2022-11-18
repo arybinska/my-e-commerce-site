@@ -5,6 +5,7 @@ import { DefaultSeo } from "next-seo";
 import SEO from "../next-seo.config.js";
 import { QueryClient, QueryClientProvider, QueryErrorResetBoundary } from '@tanstack/react-query';
 import { ErrorBoundary } from '../components/ErrorBoundary';
+import { CartStateContextProvider } from "../components/Cart/CartContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -19,6 +20,7 @@ const client = new QueryClient();
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
+    <CartStateContextProvider>
       <DefaultSeo {...SEO} />
       <QueryClientProvider client={queryClient}>
       <QueryErrorResetBoundary>
@@ -31,6 +33,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         )}
       </QueryErrorResetBoundary>
     </QueryClientProvider>
+    </CartStateContextProvider>
     </>
   );
 }

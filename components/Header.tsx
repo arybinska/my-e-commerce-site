@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ShoppingCart } from "./Cart/ShoppingCart";
 
 export const Header = () => {
   return (
@@ -45,6 +46,9 @@ export const Header = () => {
                   >
                     About
                   </Link>
+                </li>
+                <li>
+                  <ShoppingCart />
                 </li>
               </ul>
             </nav>
