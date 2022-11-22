@@ -5,13 +5,15 @@ const CartContent = () => {
   return (
     <div className="col-span-2">
       <ul className="divide-y divide-gray-200">
-        {cartState.items.map((item, index) => (
+        {(cartState.items !== undefined) && cartState.items.map((item, index) => (
           <li className="py-4" key={`${item.title}_${index}`}>
             <div className="flex justify-between">
-              <div>{item.title}</div>{" "}
+              <div>
+                {item.count} x {item.title}
+              </div>{" "}
               <div>
                 {item.price}{" "}
-                <button className="ml-4 text-red-500">
+                <button className="ml-4 text-red-500" onClick={() => cartState.removeItemFromCart(item.id)}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -43,7 +45,7 @@ const CartSummary = () => {
     <div>
       Podsumowanie Koszyka
       <div className="font-bold">
-        Liczba elementów: {cartState.items.length}
+        Liczba elementów: {(cartState.items !== undefined) && cartState.items.length}
       </div>
     </div>
   );
