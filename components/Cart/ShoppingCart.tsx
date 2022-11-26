@@ -6,7 +6,7 @@ export const ShoppingCart = () => {
   return (
     <Link href="/cart">
       <a className="inline-flex">
-        {cartState?.items.length}
+        {(cartState.items !== undefined) && cartState.items.length}
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
