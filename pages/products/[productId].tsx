@@ -1,8 +1,8 @@
-import { gql } from "@apollo/client";
 import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import { serialize } from "next-mdx-remote/serialize";
 import Link from "next/link";
 import { ProductDetails } from "../../components/Product";
+import { GetProductDetailsBySlugDocument, GetProductDetailsBySlugQuery, GetProductDetailsBySlugQueryVariables, GetProductsSlugsDocument, GetProductsSlugsQuery } from "../../generated/graphql";
 import { apolloClient } from "../../graphql/apolloClient";
 
 const ProductIdPage = ({
@@ -34,21 +34,8 @@ const ProductIdPage = ({
 export default ProductIdPage;
 
 export const getStaticPaths = async () => {
-  interface GetProductsSlugsResponse {
-    products: Product[];
-  }
-
-  interface Product {
-    slug: string;
-  }
-  const { data } = await apolloClient.query<GetProductsSlugsResponse>({
-    query: gql`
-      query GetProductsSlugs {
-        products {
-          slug
-        }
-      }
-    `,
+  const { data } = await apolloClient.query<GetProductsSlugsQuery>({
+    query: GetProductsSlugsDocument
   });
 
   return {
@@ -73,39 +60,12 @@ export const getStaticProps = async ({
     };
   }
 
-  interface GetProductDetailsBySlugResponse {
-    product: Product;
-  }
-
-  interface Product {
-    name: string;
-    price: number;
-    slug: string;
-    description: string;
-    images: Image[];
-  }
-
-  interface Image {
-    url: string;
-  }
-  const { data } = await apolloClient.query<GetProductDetailsBySlugResponse>({
+  const { data } = await apolloClient.query<GetProductDetailsBySlugQuery, GetProductDetailsBySlugQueryVariables>({
     variables: { slug: params.productId },
-    query: gql`
-      query GetProductDetailsBySlug($slug: String) {
-        product(where: { slug: $slug }) {
-          name
-          price
-          slug
-          description
-          images(first: 1) {
-            url
-          }
-        }
-      }
-    `,
+    query: GetProductDetailsBySlugDocument,
   });
 
-  if (!data) {
+  if (!data.product) {
     return {
       props: {},
       notFound: true,

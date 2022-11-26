@@ -40,14 +40,6 @@ export const Header = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link
-                    className="text-gray-500 transition hover:text-gray-500/75"
-                    href="/about"
-                  >
-                    About
-                  </Link>
-                </li>
-                <li>
                   <ShoppingCart />
                 </li>
               </ul>
