@@ -4,17 +4,15 @@ import { Rating } from "./Rating";
 import { NextSeo } from "next-seo";
 import { AppMarkdown } from "./AppMarkdown";
 import { MarkdownResult } from "../utils";
-import { useContext } from "react";
 import { useCartState } from "./Cart/CartContext";
 
 interface ProductDetail {
-  id: number;
+  id: string;
   title: string;
-  description: string;
+  description: MarkdownResult;
   thumbnailUrl: string;
   thumbnailAlt: string;
   rating: number;
-  longDescription: MarkdownResult;
 }
 interface ProductDetailsProps {
   data: ProductDetail;
@@ -25,12 +23,10 @@ export const ProductDetails = ({ data }: ProductDetailsProps) => {
     <>
       <NextSeo
         title={data.title}
-        description={data.description}
         canonical={`https://naszsklep.vercel.app/products/${data.id}`}
         openGraph={{
           url: `https://naszsklep.vercel.app/products/${data.id}`,
           title: data.title,
-          description: data.description,
           images: [
             {
               url: data.thumbnailUrl,
@@ -50,9 +46,8 @@ export const ProductDetails = ({ data }: ProductDetailsProps) => {
         objectFit="contain"
       />
       <h2 className="p-4 text-3xl font-bold">{data.title}</h2>
-      <p className="p-4">{data.description}</p>
       <article className="p-4 prose lg:prose-xl">
-        <AppMarkdown>{data.longDescription}</AppMarkdown>
+        <AppMarkdown>{data.description}</AppMarkdown>
       </article>
       <Rating rating={data.rating} />
     </>

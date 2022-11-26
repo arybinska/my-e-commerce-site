@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { ReactNode } from "react-markdown/lib/ast-to-react";
 
 interface CartItem {
-  readonly id: number;
+  readonly id: string;
   readonly price: number;
   readonly title: string;
   readonly count: number;
