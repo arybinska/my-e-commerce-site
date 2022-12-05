@@ -1,8 +1,9 @@
 import { useForm } from "react-hook-form";
 import CartPage from "../pages/cart";
 import { validateCardExpirationDate } from "../utils";
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { Input } from "./FormInput";
 
 const CheckoutFormSchema = yup
   .object({
@@ -12,18 +13,18 @@ const CheckoutFormSchema = yup
     phone: yup.string().required(),
     cardNumber: yup.string().required(),
     cardExpirationDate: yup.string().required(),
-    cardCvc: yup.string().required(),
+    cardCvc: yup.number().required(),
     country: yup.string().required(),
     address: yup.string().required(),
-    postalCode: yup.string().required(),
+    postalCode: yup.number().required(),
   })
   .required();
-type CheckoutFormData = yup.InferType<typeof CheckoutFormSchema>
+type CheckoutFormData = yup.InferType<typeof CheckoutFormSchema>;
 
 export const CheckoutForm = () => {
-  const { register, setValue, handleSubmit, formState } =
+  const { register, setValue, handleSubmit, formState: { errors } } =
     useForm<CheckoutFormData>({
-        resolver:yupResolver(CheckoutFormSchema)
+      resolver: yupResolver(CheckoutFormSchema),
     });
   const onSubmit = handleSubmit((data) => console.log(data));
   return (
@@ -32,117 +33,51 @@ export const CheckoutForm = () => {
 
       <div className="relative mx-auto max-w-screen-2xl">
         <div className="grid grid-cols-1 md:grid-cols-2">
-          {/*<div className="bg-gray-50 py-12 md:py-24">
-            <div className="mx-auto max-w-lg px-4 lg:px-8">
-              <div className="flex items-center">
-                <span className="h-10 w-10 rounded-full bg-blue-900"></span>
-
-                <h2 className="ml-4 font-medium">BambooYou</h2>
-              </div>
-
-              <div className="mt-8">
-                <p className="text-2xl font-medium tracking-tight">$99.99</p>
-                <p className="mt-1 text-sm text-gray-500">
-                  For the purchase of
-                </p>
-              </div>
-
-              <div className="mt-12">
-                <div className="flow-root">
-                  <ul className="-my-4 divide-y divide-gray-200">
-                    <li className="flex items-center justify-between py-4">
-                      <div className="flex items-start">
-                        {/* image */}
-
-          {/* <div className="ml-4">
-                          <p className="text-sm">Vibrant Trainers</p>
-
-                          <dl className="mt-1 space-y-1 text-xs text-gray-500">
-                            <div>
-                              <dt className="inline">Color:</dt>
-                              <dd className="inline">Blue</dd>
-                            </div>
-
-                            <div>
-                              <dt className="inline">Size:</dt>
-                              <dd className="inline">UK 10</dd>
-                            </div>
-                          </dl>
-                        </div>
-                      </div>
-
-                      <div>
-                        <p className="text-sm">
-                          $49.99
-                          <small className="text-gray-500">x1</small>
-                        </p>
-                      </div>
-                    </li>
-
-                    <li className="flex items-center justify-between py-4">
-                      <div className="flex items-start">
-                        {/* image */}
-          {/* <div className="ml-4">
-                          <p className="text-sm">Lettuce</p>
-
-                          <dl className="mt-1 space-y-1 text-xs text-gray-500">
-                            <div>
-                              <dt className="inline">Size:</dt>
-                              <dd className="inline">Big</dd>
-                            </div>
-                          </dl>
-                        </div>
-                      </div>
-
-                      <div>
-                        <p className="text-sm">
-                          $25
-                          <small className="text-gray-500">x2</small>
-                        </p>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div> */}
           <CartPage />
-          <div className="bg-white py-12 md:py-24">
             <div className="mx-auto max-w-lg px-4 lg:px-8">
               <form onSubmit={onSubmit} className="grid grid-cols-6 gap-4">
-                <div className="col-span-3">
-                  <label
-                    className="mb-1 block text-sm text-gray-600"
-                    htmlFor="first_name"
-                  >
-                    First Name
-                  </label>
+                <Input
+                  name="firstName"
+                  label="First Name"
+                  register={register}
+                  type="text"
+                  placeholder=""
+                  autoComplete=""
+                  errors={errors}
+                />
+                <Input
+                  name="lastName"
+                  label="Last Name"
+                  register={register}
+                  type="text"
+                  placeholder=""
+                  autoComplete=""
+                  errors={errors}
+                />
+                <Input
+                  name="emailAddress"
+                  label="Email"
+                  register={register}
+                  type="email"
+                  placeholder=""
+                  autoComplete="email"
+                  errors={errors}
+                />
+                <Input
+                  name="phone"
+                  label="Phone"
+                  register={register}
+                  placeholder=""
+                  type="tel"
+                  autoComplete=""
+                  errors={errors}
+                />
 
-                  <input
-                    className="w-full rounded-lg border-gray-200 p-2.5 text-sm shadow-sm"
-                    type="text"
-                    id="first_name"
-                    {...register("firstName")}
-                  />
-                </div>
-
-                <div className="col-span-3">
-                  <label
-                    className="mb-1 block text-sm text-gray-600"
-                    htmlFor="last_name"
-                  >
-                    Last Name
-                  </label>
-
-                  <input
-                    className="w-full rounded-lg border-gray-200 p-2.5 text-sm shadow-sm"
-                    type="text"
-                    id="last_name"
-                    {...register("lastName")}
-                  />
-                </div>
-
-                <div className="col-span-6">
+                {
+                // Korzystając z yup, dodaj walidację do swojego formularza. Następnie przetłumacz błędy na język polski i skonfiguruj yup tak, aby wyświetlały się Twoje tłumaczenia zamiast oryginałów po angielsku.
+                // 
+                // 
+                /* <div className="col-span-6">
                   <label
                     className="mb-1 block text-sm text-gray-600"
                     htmlFor="email"
@@ -162,83 +97,43 @@ export const CheckoutForm = () => {
                   <span role="alert" className="text-red-500 font-bold text-sm">
                     {formState.errors.emailAddress?.message}
                   </span>
-                </div>
-
-                <div className="col-span-6">
-                  <label
-                    className="mb-1 block text-sm text-gray-600"
-                    htmlFor="phone"
-                  >
-                    Phone
-                  </label>
-
-                  <input
-                    className="w-full rounded-lg border-gray-200 p-2.5 text-sm shadow-sm"
-                    type="tel"
-                    id="phone"
-                    {...register("phone")}
-                  />
-                </div>
+                </div> */}
 
                 <fieldset className="col-span-6">
                   <legend className="mb-1 block text-sm text-gray-600">
                     Card Details
                   </legend>
-
+                  <Input
+                    name="cardNumber"
+                    label=""
+                    register={register}
+                    placeholder="Card number"
+                    type="text"
+                    autoComplete="cc-number"
+                    errors={errors}
+                  />
                   <div className="-space-y-px rounded-lg bg-white shadow-sm">
-                    <div>
-                      <label className="sr-only" htmlFor="card-number">
-                        Card Number
-                      </label>
-
-                      <input
-                        className="relative w-full rounded-t-lg border-gray-200 p-2.5 text-sm placeholder-gray-400 focus:z-10"
-                        type="text"
-                        {...register("cardNumber")}
-                        id="card-number"
-                        placeholder="Card number"
-                        autoComplete="cc-number"
-                      />
-                    </div>
-
                     <div className="flex -space-x-px">
                       <div className="flex-1">
-                        <label
-                          className="sr-only"
-                          htmlFor="card-expiration-date"
-                        >
-                          Expiration Date
-                        </label>
-
-                        <input
-                          className="relative w-full rounded-bl-lg border-gray-200 p-2.5 text-sm placeholder-gray-400 focus:z-10"
-                          type="text"
-                          {...register("cardExpirationDate", {
-                            required: true,
-                            validate: validateCardExpirationDate,
-                          })}
-                          id="card-expiration-date"
+                        <Input
+                          name="cardExpirationDate"
+                          label=""
+                          register={register}
                           placeholder="MM / YY"
-                        />
-                        <span
-                          role="alert"
-                          className="text-red-500 font-bold text-sm"
-                        >
-                          {formState.errors.cardExpirationDate?.message}
-                        </span>
-                      </div>
-
-                      <div className="flex-1">
-                        <label className="sr-only" htmlFor="card-cvc">
-                          CVC
-                        </label>
-
-                        <input
-                          className="relative w-full rounded-br-lg border-gray-200 p-2.5 text-sm placeholder-gray-400 focus:z-10"
                           type="text"
-                          {...register("cardCvc")}
-                          id="card-cvc"
+                          autoComplete=""
+                          errors={errors}
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <Input
+                          name="cardExpirationDate"
+                          label=""
+                          register={register}
                           placeholder="CVC"
+                          type="text"
+                          autoComplete=""
+                          errors={errors}
                         />
                       </div>
                     </div>
@@ -249,49 +144,33 @@ export const CheckoutForm = () => {
                   <legend className="mb-1 block text-sm text-gray-600">
                     Billing Address
                   </legend>
-
-                  <div className="-space-y-px rounded-lg bg-white shadow-sm">
-                    <div>
-                      <label className="sr-only" htmlFor="country">
-                        Country
-                      </label>
-
-                      <input
-                        className="relative w-full rounded-t-lg border-gray-200 p-2.5 text-sm focus:z-10"
-                        id="country"
-                        {...register("country")}
-                        type="text"
-                        placeholder="Country"
-                      ></input>
-                    </div>
-                    <div>
-                      <label className="sr-only" htmlFor="country">
-                        Country
-                      </label>
-
-                      <input
-                        className="relative w-full rounded-t-lg border-gray-200 p-2.5 text-sm focus:z-10"
-                        id="address"
-                        {...register("address")}
-                        type="text"
-                        placeholder="Address"
-                      ></input>
-                    </div>
-                    <div>
-                      <label className="sr-only" htmlFor="postal-code">
-                        ZIP/Post Code
-                      </label>
-
-                      <input
-                        className="relative w-full rounded-b-lg border-gray-200 p-2.5 text-sm placeholder-gray-400 focus:z-10"
-                        type="text"
-                        {...register("postalCode")}
-                        id="postal-code"
-                        autoComplete="postal-code"
-                        placeholder="ZIP/Post Code"
-                      />
-                    </div>
-                  </div>
+                  <Input
+                    name="country"
+                    label=""
+                    register={register}
+                    placeholder="Country"
+                    type="text"
+                    autoComplete=""
+                    errors={errors}
+                  />
+                  <Input
+                    name="address"
+                    label=""
+                    register={register}
+                    placeholder="Address"
+                    type="text"
+                    autoComplete=""
+                    errors={errors}
+                  />
+                  <Input
+                    name="postalCode"
+                    label=""
+                    register={register}
+                    placeholder="ZIP/Post Code"
+                    type="text"
+                    autoComplete="postal-code"
+                    errors={errors}
+                  />
                 </fieldset>
 
                 <div className="col-span-6">
@@ -306,7 +185,6 @@ export const CheckoutForm = () => {
             </div>
           </div>
         </div>
-      </div>
     </section>
   );
 };
