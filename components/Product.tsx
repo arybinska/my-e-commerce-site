@@ -5,6 +5,7 @@ import { NextSeo } from "next-seo";
 import { AppMarkdown } from "./AppMarkdown";
 import { MarkdownResult } from "../utils";
 import { useCartState } from "./Cart/CartContext";
+import { useCreateProductReviewMutation } from "../generated/graphql";
 
 interface ProductDetail {
   id: string;
@@ -19,6 +20,20 @@ interface ProductDetailsProps {
 }
 
 export const ProductDetails = ({ data }: ProductDetailsProps) => {
+  const [createReview, createReviewResult] = useCreateProductReviewMutation();
+
+  const addReview = () =>
+    createReview({
+      variables: {
+        review: {
+          headline: "Klient",
+          name: "Alicja",
+          email: "siema@siema.com",
+          content: "Super produkt!",
+          rating: 5,
+        },
+      },
+    });
   return (
     <>
       <NextSeo
@@ -50,6 +65,18 @@ export const ProductDetails = ({ data }: ProductDetailsProps) => {
         <AppMarkdown>{data.description}</AppMarkdown>
       </article>
       <Rating rating={data.rating} />
+      <button onClick={addReview} type="button">
+        Dodaj komentarz
+      </button>
+      {createReviewResult.loading && (
+        <div className="animate-bounce text-3xl">Ładowanko...</div>
+      )}
+      {createReviewResult.error && (
+        <pre>{JSON.stringify(createReviewResult.error, null, 2)}</pre>
+      )}
+      {createReviewResult.data && (
+        <pre>{JSON.stringify(createReviewResult.data, null, 2)}</pre>
+      )}
     </>
   );
 };
