@@ -4,6 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Input } from "./FormInput";
 import { validateCardExpirationDate, validatePostalCode } from "../utils";
+import { useCreateCheckoutOrderMutation } from "../generated/graphql";
 
 const CheckoutFormSchema = yup
   .object({
@@ -60,6 +61,25 @@ export const CheckoutForm = () => {
     resolver: yupResolver(CheckoutFormSchema),
   });
   const onSubmit = handleSubmit((data) => console.log(data));
+  const [createCheckout, createCheckoutResult] =
+    useCreateCheckoutOrderMutation();
+  const addOrder = () =>
+    createCheckout({
+      variables: {
+        order: {
+          firstName: "firstname",
+          lastName: "lastname",
+          emailAddress: "email@sas.com",
+          phone: "677888888",
+          cardNumber: "1234567891234567",
+          cardCvc: "222",
+          cardExpirationDate: "12/24",
+          country: "Poland",
+          address: "Gdzieś",
+          postalCode: "33-455",
+        },
+      },
+    });
   return (
     <section>
       <h1 className="sr-only">Checkout</h1>
@@ -173,10 +193,20 @@ export const CheckoutForm = () => {
               <div className="col-span-6 m-5">
                 <button
                   className="block w-full rounded-lg bg-black p-2.5 text-sm text-white"
-                  type="submit"
+                  type="button"
+                  onClick={addOrder}
                 >
-                  Pay Now
+                  Checkout
                 </button>
+                {createCheckoutResult.loading && (
+                  <div className="animate-bounce text-3xl">Ładowanko...</div>
+                )}
+                {createCheckoutResult.error && (
+                  <p>Coś poszło nie tak</p>
+                )}
+                {createCheckoutResult.data && (
+                  <p>Zamówienie zostało złożone </p>
+                )}
               </div>
             </form>
           </div>
