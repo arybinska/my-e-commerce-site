@@ -4,7 +4,7 @@ import { useCartState } from "./CartContext";
 export const ShoppingCart = () => {
   const cartState = useCartState();
   return (
-    <Link href="/cart">
+    <Link href="/checkout">
       <a className="inline-flex">
         {(cartState.items !== undefined) && cartState.items.length}
         <svg

@@ -1,20 +1,23 @@
+import React, { ReactNode } from "react";
 import { InputHTMLAttributes } from "react";
 import {
   FieldErrorsImpl,
   FieldValues,
   Path,
+  useFormContext,
   UseFormRegister,
 } from "react-hook-form";
 
 interface InputProps<FormTypes extends FieldValues>
   extends InputHTMLAttributes<HTMLInputElement> {
   name: Path<FormTypes>;
-  label: string;
+  label?: string;
   type: "text" | "number" | "email" | "date" | "tel";
-  placeholder: string;
+  placeholder?: string;
   register: UseFormRegister<FormTypes>;
-  autoComplete: string;
+  autoComplete?: string;
   errors: Partial<FieldErrorsImpl<FormTypes>>;
+  pattern?: string;
 }
 
 export const Input = <FormTypes extends FieldValues>({
@@ -26,10 +29,10 @@ export const Input = <FormTypes extends FieldValues>({
   style,
   autoComplete,
   errors,
+  pattern,
   ...rest
 }: InputProps<FormTypes>) => {
-  const errorMsg = errors?.[name]?.message;
-  const hasError = Boolean(errors && errorMsg);
+  const error = errors[name];
   return (
     <div className={type === "text" ? "col-span-3" : "col-span-6"}>
       <label
@@ -50,9 +53,9 @@ export const Input = <FormTypes extends FieldValues>({
         placeholder={placeholder}
         autoComplete={autoComplete}
       />
-      {(errorMsg && hasError) ? (
+      {error ? (
         <span role="alert" className="text-red-500 font-bold text-sm">
-          {String(errorMsg)}
+          {errors?.[name]?.type === "required" ? <p>Pole jest wymagane</p>: error.message as ReactNode}
         </span>
       ) : ""}
     </div>
