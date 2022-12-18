@@ -15,7 +15,7 @@ interface ProductDetail {
   thumbnailUrl: string;
   thumbnailAlt: string;
   rating: number;
-  price: string;
+  price: number;
 }
 interface ProductDetailsProps {
   data: ProductDetail;
@@ -89,7 +89,6 @@ export const ProductDetails = ({ data }: ProductDetailsProps) => {
                   Dodaj komentarz
                 </button>
               </div>
-              
             </div>
             <AddReview />
           </div>

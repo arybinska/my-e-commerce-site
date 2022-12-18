@@ -25,6 +25,7 @@ const ProductIdPage = ({
           thumbnailAlt: data.name,
           description: data.description,
           rating: 5,
+          price: data.price,
         }}
       />
     </div>
