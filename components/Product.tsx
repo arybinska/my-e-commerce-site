@@ -1,11 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Rating } from "./Rating";
 import { NextSeo } from "next-seo";
 import { AppMarkdown } from "./AppMarkdown";
 import { MarkdownResult } from "../utils";
 import { useCartState } from "./Cart/CartContext";
 import { useCreateProductReviewMutation } from "../generated/graphql";
+import { Review } from "./Review/Reviews";
+import { AddReview } from "./Review/AddReview";
 
 interface ProductDetail {
   id: string;
@@ -14,6 +15,7 @@ interface ProductDetail {
   thumbnailUrl: string;
   thumbnailAlt: string;
   rating: number;
+  price: string;
 }
 interface ProductDetailsProps {
   data: ProductDetail;
@@ -52,31 +54,56 @@ export const ProductDetails = ({ data }: ProductDetailsProps) => {
           siteName: "Nasz sklep",
         }}
       />
-      <Image
-        src={data.thumbnailUrl}
-        alt={data.thumbnailAlt}
-        layout="responsive"
-        width={16}
-        height={9}
-        objectFit="contain"
-      />
-      <h2 className="p-4 text-3xl font-bold">{data.title}</h2>
-      <article className="p-4 prose lg:prose-xl">
-        <AppMarkdown>{data.description}</AppMarkdown>
-      </article>
-      <Rating rating={data.rating} />
-      <button onClick={addReview} type="button">
-        Dodaj komentarz
-      </button>
-      {createReviewResult.loading && (
-        <div className="animate-bounce text-3xl">Ładowanko...</div>
-      )}
-      {createReviewResult.error && (
-        <pre>{JSON.stringify(createReviewResult.error, null, 2)}</pre>
-      )}
-      {createReviewResult.data && (
-        <pre>{JSON.stringify(createReviewResult.data, null, 2)}</pre>
-      )}
+      {/* Product info */}
+      <div className="mx-auto max-w-2xl px-4 pt-10 pb-16 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pt-16 lg:pb-24">
+        <div className="h-full w-full object-cover object-center">
+          <Image
+            src={data.thumbnailUrl}
+            alt={data.thumbnailAlt}
+            width={300}
+            height={300}
+            objectFit="contain"
+          />
+        </div>
+        <div className="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+            {data.title}
+          </h1>
+          <div>
+            <div className="mt-10 text-xl font-bold sm:text-2xl">
+              <h2>Product information</h2>
+            </div>
+            <p className="text-3xl tracking-tight text-gray-900">
+              {data.price}
+            </p>
+            <article className=" prose lg:prose-xl">
+              <AppMarkdown>{data.description}</AppMarkdown>
+            </article>
+          </div>
+          {/* Reviews */}
+          <div className="mt-6">
+            <Review rating={data.rating} />
+            <div className="flex items-center">
+              <div className="flex items-center">
+                <button onClick={addReview} type="button">
+                  Dodaj komentarz
+                </button>
+              </div>
+              
+            </div>
+            <AddReview />
+          </div>
+          {createReviewResult.loading && (
+            <div className="animate-bounce text-3xl">Ładowanko...</div>
+          )}
+          {createReviewResult.error && (
+            <pre>{JSON.stringify(createReviewResult.error, null, 2)}</pre>
+          )}
+          {createReviewResult.data && (
+            <pre>{JSON.stringify(createReviewResult.data, null, 2)}</pre>
+          )}
+        </div>
+      </div>
     </>
   );
 };
