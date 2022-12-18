@@ -26,7 +26,7 @@ const CheckoutFormSchema = yup
       .string()
       .required()
       .length(9, "Numer telefonu musi zawierać 9 cyfr")
-      .matches(/^[0-9]+$/, "Numer składa się tylko z cyfr"),
+      .matches(/^[0-9]+$/, "Numer powinien składać się tylko z cyfr"),
     cardNumber: yup
       .string()
       .required("Numer konta jest obowiązkowy")
@@ -56,30 +56,29 @@ export const CheckoutForm = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors},
   } = useForm<CheckoutFormData>({
     resolver: yupResolver(CheckoutFormSchema),
   });
-  const onSubmit = handleSubmit((data) => console.log(data));
   const [createCheckout, createCheckoutResult] =
     useCreateCheckoutOrderMutation();
-  const addOrder = () =>
+  const addOrder = handleSubmit((data) =>
     createCheckout({
       variables: {
         order: {
-          firstName: "firstname",
-          lastName: "lastname",
-          emailAddress: "email@sas.com",
-          phone: "677888888",
-          cardNumber: "1234567891234567",
-          cardCvc: "222",
-          cardExpirationDate: "12/24",
-          country: "Poland",
-          address: "Gdzieś",
-          postalCode: "33-455",
+          firstName: data.firstName,
+          lastName: data.lastName,
+          emailAddress: data.emailAddress,
+          phone: data.phone,
+          cardNumber: data.cardNumber,
+          cardCvc: data.cardCvc,
+          cardExpirationDate: data.cardExpirationDate,
+          country: data.country,
+          address: data.address,
+          postalCode: data.postalCode,
         },
       },
-    });
+    }));
   return (
     <section>
       <h1 className="sr-only">Checkout</h1>
@@ -88,7 +87,7 @@ export const CheckoutForm = () => {
         <div className="grid grid-cols-1 md:grid-cols-2">
           <CartPage />
           <div className="mx-auto max-w-lg px-4 lg:px-8">
-            <form onSubmit={onSubmit} className="grid grid-cols-6 gap-4">
+            <form onSubmit={addOrder} className="grid grid-cols-6 gap-4">
               <Input
                 name="firstName"
                 label="First Name"
@@ -193,8 +192,7 @@ export const CheckoutForm = () => {
               <div className="col-span-6 m-5">
                 <button
                   className="block w-full rounded-lg bg-black p-2.5 text-sm text-white"
-                  type="button"
-                  onClick={addOrder}
+                  type="submit"
                 >
                   Checkout
                 </button>

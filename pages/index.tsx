@@ -1,7 +1,7 @@
-import { Main } from "../components/Main";
+import Promo from "../components/Promo";
 
 const Home = () => {
-return <Main><p>Witaj na stronie</p></Main>
+return <><Promo /></>
 };
 
 export default Home;

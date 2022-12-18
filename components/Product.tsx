@@ -108,6 +108,8 @@ export const ProductListItem = ({ data }: ProductListItemProps) => {
             <h2 className="pb-4 text-3xl font-bold">{data.title}</h2>
           </a>
         </Link>
+      </div>
+      <div className="m-auto">
         <button
           onClick={() =>
             cartState.addItemToCart({
@@ -117,7 +119,7 @@ export const ProductListItem = ({ data }: ProductListItemProps) => {
               count: 1,
             })
           }
-          className="text-black bg-blue-100 border-spacing-2 p-2 hover:bg-red-50"
+          className="inline-block rounded-md border border-transparent bg-indigo-600 justify-center py-2 px-6 text-center font-medium text-white hover:bg-indigo-700"
         >
           Dodaj do koszyka
         </button>
