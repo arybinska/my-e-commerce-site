@@ -4,6 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Input } from "./FormInput";
 import { validateCardExpirationDate, validatePostalCode } from "../utils";
+import { useCreateCheckoutOrderMutation } from "../generated/graphql";
 
 const CheckoutFormSchema = yup
   .object({
@@ -25,7 +26,7 @@ const CheckoutFormSchema = yup
       .string()
       .required()
       .length(9, "Numer telefonu musi zawierać 9 cyfr")
-      .matches(/^[0-9]+$/, "Numer składa się tylko z cyfr"),
+      .matches(/^[0-9]+$/, "Numer powinien składać się tylko z cyfr"),
     cardNumber: yup
       .string()
       .required("Numer konta jest obowiązkowy")
@@ -55,11 +56,29 @@ export const CheckoutForm = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors},
   } = useForm<CheckoutFormData>({
     resolver: yupResolver(CheckoutFormSchema),
   });
-  const onSubmit = handleSubmit((data) => console.log(data));
+  const [createCheckout, createCheckoutResult] =
+    useCreateCheckoutOrderMutation();
+  const addOrder = handleSubmit((data) =>
+    createCheckout({
+      variables: {
+        order: {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          emailAddress: data.emailAddress,
+          phone: data.phone,
+          cardNumber: data.cardNumber,
+          cardCvc: data.cardCvc,
+          cardExpirationDate: data.cardExpirationDate,
+          country: data.country,
+          address: data.address,
+          postalCode: data.postalCode,
+        },
+      },
+    }));
   return (
     <section>
       <h1 className="sr-only">Checkout</h1>
@@ -68,7 +87,7 @@ export const CheckoutForm = () => {
         <div className="grid grid-cols-1 md:grid-cols-2">
           <CartPage />
           <div className="mx-auto max-w-lg px-4 lg:px-8">
-            <form onSubmit={onSubmit} className="grid grid-cols-6 gap-4">
+            <form onSubmit={addOrder} className="grid grid-cols-6 gap-4">
               <Input
                 name="firstName"
                 label="First Name"
@@ -175,8 +194,17 @@ export const CheckoutForm = () => {
                   className="block w-full rounded-lg bg-black p-2.5 text-sm text-white"
                   type="submit"
                 >
-                  Pay Now
+                  Checkout
                 </button>
+                {createCheckoutResult.loading && (
+                  <div className="animate-bounce text-3xl">Ładowanko...</div>
+                )}
+                {createCheckoutResult.error && (
+                  <p>Coś poszło nie tak</p>
+                )}
+                {createCheckoutResult.data && (
+                  <p>Zamówienie zostało złożone </p>
+                )}
               </div>
             </form>
           </div>

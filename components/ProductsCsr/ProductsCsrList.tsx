@@ -13,6 +13,7 @@ export const ProductsCsrList = ({ page }: ProductsCsrProps) => {
     <ProductsLayout>
       {result.data!.map((product) => (
         <Prod
+        id={product.id}
           key={product.id}
           href={`/${product.id}`}
           name={product.title}

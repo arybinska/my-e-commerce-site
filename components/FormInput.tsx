@@ -1,10 +1,9 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState } from "react";
 import { InputHTMLAttributes } from "react";
 import {
   FieldErrorsImpl,
   FieldValues,
   Path,
-  useFormContext,
   UseFormRegister,
 } from "react-hook-form";
 
@@ -33,6 +32,7 @@ export const Input = <FormTypes extends FieldValues>({
   ...rest
 }: InputProps<FormTypes>) => {
   const error = errors[name];
+  const [value, setValue] = useState("");
   return (
     <div className={type === "text" ? "col-span-3" : "col-span-6"}>
       <label
