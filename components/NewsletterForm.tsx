@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Input } from "./FormInput";
+import { useMutation } from "react-query";
 
 const CheckoutFormSchema = yup
   .object({
@@ -22,13 +23,19 @@ export const NewsletterForm = () => {
     resolver: yupResolver(CheckoutFormSchema),
   });
 
-  const onSubmit = handleSubmit((data) => {
-    fetch("http://localhost:3000/api/hello", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: data.email }),
-    });
+  const { mutate } = useMutation({
+    mutationKey: ["add-to-newsletter"],
+    async mutationFn({ email }: { email: string }) {
+      await fetch("http://localhost:3000/api/hello", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+    },
   });
+
+  const onSubmit = handleSubmit((data) => mutate(data));
+
   return (
     <form onSubmit={onSubmit} className="col-span-6 m-10">
       <div className="flex justify-center">
