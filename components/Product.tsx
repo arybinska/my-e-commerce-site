@@ -5,8 +5,9 @@ import { AppMarkdown } from "./AppMarkdown";
 import { MarkdownResult } from "../utils";
 import { useCartState } from "./Cart/CartContext";
 import { useCreateProductReviewMutation } from "../generated/graphql";
-import { Review } from "./Review/Reviews";
-import { AddReview } from "./Review/AddReview";
+import { WhiteStar, YellowStar } from "./Review/Stars";
+import { formatMoney } from "../pages/api/formatMoney";
+import { ProductReviewContainer } from "./Review/ProductReviewContainer";
 
 interface ProductDetail {
   id: string;
@@ -22,20 +23,6 @@ interface ProductDetailsProps {
 }
 
 export const ProductDetails = ({ data }: ProductDetailsProps) => {
-  const [createReview, createReviewResult] = useCreateProductReviewMutation();
-
-  const addReview = () =>
-    createReview({
-      variables: {
-        review: {
-          headline: "Klient",
-          name: "Alicja",
-          email: "siema@siema.com",
-          content: "Super produkt!",
-          rating: 5,
-        },
-      },
-    });
   return (
     <>
       <NextSeo
@@ -54,53 +41,95 @@ export const ProductDetails = ({ data }: ProductDetailsProps) => {
           siteName: "Nasz sklep",
         }}
       />
-      {/* Product info */}
-      <div className="mx-auto max-w-2xl px-4 pt-10 pb-16 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pt-16 lg:pb-24">
-        <div className="h-full w-full object-cover object-center">
+      <div className="mx-auto max-w-2xl px-4 pt-10 pb-16 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-2 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pt-16 lg:pb-24">
+        <div className="ml-5 h-full w-full object-cover object-center">
           <Image
             src={data.thumbnailUrl}
             alt={data.thumbnailAlt}
-            width={300}
-            height={300}
+            width={500}
+            height={500}
             objectFit="contain"
           />
         </div>
-        <div className="lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
-            {data.title}
-          </h1>
-          <div>
-            <div className="mt-10 text-xl font-bold sm:text-2xl">
-              <h2>Product information</h2>
-            </div>
-            <p className="text-3xl tracking-tight text-gray-900">
-              {data.price}
-            </p>
-            <article className=" prose lg:prose-xl">
-              <AppMarkdown>{data.description}</AppMarkdown>
-            </article>
+        <div className="h-full w-full object-cover object-center">
+          <div className="lg:col-span-2 lg:pr-8">
+            <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+              {data.title}
+            </h1>
           </div>
-          {/* Reviews */}
-          <div className="mt-6">
-            <Review rating={data.rating} />
-            <div className="flex items-center">
-              <div className="flex items-center">
-                <button onClick={addReview} type="button">
-                  Dodaj komentarz
-                </button>
+          <div className="mt-4 lg:row-span-3 lg:mt-0">
+            <p className="sr-only">Product information</p>
+            <p className="mt-4 text-3xl tracking-tight text-gray-900">
+              {formatMoney(data.price / 100)}
+            </p>
+            <div className="py-10 lg:col-span-2 lg:col-start-1 lg:pt-6 lg:pb-8 lg:pr-8">
+              <div>
+                <h3 className="font-bold sm:text-lg mb-5 mt-5">Description</h3>
+                <div className="space-y-6">
+                  <AppMarkdown>{data.description}</AppMarkdown>
+                </div>
               </div>
             </div>
-            <AddReview />
           </div>
-          {createReviewResult.loading && (
-            <div className="animate-bounce text-3xl">Ładowanko...</div>
-          )}
-          {createReviewResult.error && (
-            <pre>{JSON.stringify(createReviewResult.error, null, 2)}</pre>
-          )}
-          {createReviewResult.data && (
-            <pre>{JSON.stringify(createReviewResult.data, null, 2)}</pre>
-          )}
+          <div className="mx-auto max-w-screen-xl py-4">
+            <h2 className="font-bold sm:text-lg">Customer Reviews</h2>
+            <div className="mt-4  mb-4 flex items-center">
+              <p className="text-3xl font-medium">
+                {data.rating}
+                <span className="sr-only"> Average review score </span>
+              </p>
+              <div className="ml-4">
+                <div className="-ml-1 flex">
+                  {data.rating === 1 && (
+                    <>
+                      <YellowStar />
+                      <WhiteStar />
+                      <WhiteStar />
+                      <WhiteStar />
+                      <WhiteStar />
+                    </>
+                  )}
+                  {data.rating === 2 && (
+                    <>
+                      <YellowStar />
+                      <YellowStar />
+                      <WhiteStar />
+                      <WhiteStar />
+                      <WhiteStar />
+                    </>
+                  )}
+                  {data.rating === 3 && (
+                    <>
+                      <YellowStar />
+                      <YellowStar />
+                      <YellowStar />
+                      <WhiteStar />
+                      <WhiteStar />
+                    </>
+                  )}
+                  {data.rating === 4 && (
+                    <>
+                      <YellowStar />
+                      <YellowStar />
+                      <YellowStar />
+                      <YellowStar />
+                      <WhiteStar />
+                    </>
+                  )}
+                  {data.rating === 5 && (
+                    <>
+                      <YellowStar />
+                      <YellowStar />
+                      <YellowStar />
+                      <YellowStar />
+                      <YellowStar />
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+            <ProductReviewContainer productSlug={data.id} />
+          </div>
         </div>
       </div>
     </>

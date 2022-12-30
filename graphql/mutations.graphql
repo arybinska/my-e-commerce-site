@@ -1,12 +1,11 @@
-mutation CreateProductReview($review: ReviewCreateInput! ) {
+mutation CreateProductReview($review: ReviewCreateInput!) {
   review: createReview(data: $review) {
-    id
-    stage
+    ...reviewContent
   }
 }
 
-mutation CreateCheckoutOrder($order: CheckoutCreateInput! ) {
-    order: createCheckout(data:$order) {
+mutation CreateCheckoutOrder($order: CheckoutCreateInput!) {
+  order: createCheckout(data: $order) {
     id
   }
 }
