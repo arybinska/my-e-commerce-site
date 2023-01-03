@@ -18,7 +18,7 @@ export const NewsletterForm = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitted },
   } = useForm<CheckoutFormData>({
     resolver: yupResolver(CheckoutFormSchema),
   });
@@ -59,6 +59,12 @@ export const NewsletterForm = () => {
         <button className="block w-full rounded-lg bg-black p-2.5 text-sm text-white">
           Try it & Subscribe
         </button>
+        {isSubmitted && (
+          <p className="text-green-700 text-lx text-center font-semibold mt-4">
+            Właśnie dołączyłeś do grona naszej załogi! Bardzo się cieszymy!
+            Sprawdź maila!
+          </p>
+        )}
       </div>
     </form>
   );
