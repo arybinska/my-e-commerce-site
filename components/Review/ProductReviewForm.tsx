@@ -7,6 +7,7 @@ import {
   GetReviewsForProductSlugQuery,
   useCreateProductReviewMutation,
 } from "../../generated/graphql";
+import { useState } from "react";
 
 const ReviewFormSchema = yup
   .object({
@@ -90,67 +91,83 @@ export const ProductReviewForm = ({ productSlug }: ProductReviewFormProps) => {
       }, //tutaj jednocześnie tworzymy tymczasowe dane, w momencie gdy dane idą do serwera; aktualizujemy widok danymi, następnie dane trafiają do funkcji update
     });
   });
-  return (
-    <form onSubmit={onSubmit} className="col-span-6 m-10 bg-gr">
-      <div className="flex justify-center">
-        <div className="text-xl font-medium text-black">Dodaj komentarz</div>
-      </div>
-      <div className="mx-auto m-6">
-        <Input
-          name="content"
-          label="Komentarz"
-          register={register}
-          type="text"
-          errors={errors}
-        />
-        <Input
-          name="headline"
-          label="Tytuł"
-          register={register}
-          type="text"
-          errors={errors}
-        />
-        <Input
-          name="name"
-          label="Imię"
-          register={register}
-          type="text"
-          errors={errors}
-        />
-        <Input
-          name="email"
-          label="Email"
-          register={register}
-          type="email"
-          errors={errors}
-        />
-        <Input
-          name="rating"
-          label="Ocena"
-          register={register}
-          type="number"
-          errors={errors}
-        />
-      </div>
+  const [isActive, setIsActive] = useState(false);
 
+  const handleClick = () => {
+    setIsActive((current) => !current);
+  };
+  return (
+    <>
       <div className="mx-auto w-1/2 m-5">
-        <button className="block w-full rounded-lg bg-black p-2.5 text-sm text-white">
-          Wyślij
+        <button
+          className={
+            !isActive
+              ? "block w-full rounded-lg bg-black p-3 text-m text-white"
+              : "text-black bg-white block w-full rounded-lg p-3 text-m"
+          }
+          onClick={handleClick}
+        >
+          Dodaj komentarz
         </button>
       </div>
-      {createReviewResult.loading && (
-        <div className="animate-bounce text-3xl">Ładowanko...</div>
-      )}
-      {createReviewResult.error && (
-        <p className="text-red-600 text-lx text-center font-semibold">
-          Coś poszło nie tak. Spróbuj jeszcze raz.
-        </p>
-      )}
-      {createReviewResult.data && (
-        <p className="text-green-700 text-lx text-center font-semibold">
-          Twój komentarz został dodany.
-        </p>
-      )}
-    </form>
+
+      <div className={isActive ? "mx-auto" : "hidden"}>
+        <form onSubmit={onSubmit} className="col-span-6 m-10 mt-2 bg-gr">
+          <Input
+            name="content"
+            label="Komentarz"
+            register={register}
+            type="text"
+            errors={errors}
+          />
+          <Input
+            name="headline"
+            label="Tytuł"
+            register={register}
+            type="text"
+            errors={errors}
+          />
+          <Input
+            name="name"
+            label="Imię"
+            register={register}
+            type="text"
+            errors={errors}
+          />
+          <Input
+            name="email"
+            label="Email"
+            register={register}
+            type="email"
+            errors={errors}
+          />
+          <Input
+            name="rating"
+            label="Ocena"
+            register={register}
+            type="number"
+            errors={errors}
+          />
+          <div className="mx-auto w-1/2 m-5">
+            <button className="block w-full rounded-lg bg-black p-2.5 text-sm text-white">
+              Wyślij
+            </button>
+          </div>
+          {createReviewResult.loading && (
+            <div className="text-center animate-bounce text-lx">Ładowanko...</div>
+          )}
+          {createReviewResult.error && (
+            <p className="text-red-600 text-lx text-center font-semibold">
+              Coś poszło nie tak. Spróbuj jeszcze raz.
+            </p>
+          )}
+          {createReviewResult.data && (
+            <p className="text-green-700 text-lx text-center font-semibold">
+              Twój komentarz został dodany.
+            </p>
+          )}
+        </form>
+      </div>
+    </>
   );
 };
